@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: ./db
+    image: steam_bot_db_image
+    container_name: steam_bot_db 
+    env_file:
+      - ./db/db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  
+  discord_bot:
+    build:
+      context: ./discord-bot
+    image: steam_bot_discord_bot
+    container_name: discord_bot
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    env_file:
+      - ./discord-bot/.env
+volumes:
+  postgres_data:
